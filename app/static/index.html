@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="local-token" content="__LOCAL_TOKEN__">
+  <meta name="color-scheme" content="light">
+  <title>听页 · 视频转笔记</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23255b4d'/%3E%3Cpath d='M18 35V27m9 17V20m10 19V25m9 8v-4' stroke='%23fff' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="听页首页">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 36 36" fill="none"><path d="M8 20v-4m7 11V9m7 15V12m7 8v-4" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/></svg></span>
+        <span class="brand-name">听页<span class="brand-subtitle">TINGYE</span></span>
+      </a>
+      <div class="header-actions"><span id="connection-status" class="connection is-loading"><span class="status-dot"></span><span id="connection-text">正在连接</span></span><button class="icon-button" type="button" id="settings-top" aria-label="打开收录设置" title="收录设置"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16M4 17h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="9" cy="7" r="2.5" fill="currentColor"/><circle cx="15" cy="17" r="2.5" fill="currentColor"/></svg></button></div>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <div><p class="eyebrow">BILIBILI <span aria-hidden="true">↗</span> OBSIDIAN</p><h1 id="page-title">听过的，留成一页。</h1><p class="intro-copy">贴上视频链接，把带时间戳的文字保存到你的笔记库。</p></div>
+        <div class="intro-art" aria-hidden="true"><span class="art-line"></span><span class="art-line"></span><span class="art-line"></span><span class="art-line"></span><span class="art-line"></span><span class="art-line"></span><span class="art-line"></span><span class="art-line"></span><span class="art-line"></span><span class="art-page"><i></i><i></i><i></i></span></div>
+      </section>
+
+      <div id="connection-error" class="banner error-banner" role="alert" hidden><span id="connection-error-text"></span><button id="reconnect-button" class="text-button" type="button">重新连接</button></div>
+
+      <section class="destination-bar" aria-label="当前保存位置">
+        <span class="destination-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M3.5 7A1.5 1.5 0 0 1 5 5.5h5l2 2H19A1.5 1.5 0 0 1 20.5 9v9a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 18Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span>
+        <div class="destination-content"><span class="small-label">保存到 Obsidian</span><p id="destination-path">正在读取笔记库…</p></div>
+        <button class="secondary-button compact" id="choose-destination" type="button">更改位置<span aria-hidden="true">↗</span></button>
+      </section>
+
+      <div class="workspace-grid">
+        <section class="capture-card card" aria-labelledby="capture-heading">
+          <div class="section-heading"><h2 id="capture-heading"><span class="section-number">01</span>添加视频</h2><span class="subtle-label">支持批量收录</span></div>
+          <form id="capture-form">
+            <label for="links" class="input-label">B 站视频链接</label>
+            <div class="link-input-wrap"><textarea id="links" name="links" rows="7" spellcheck="false" placeholder="粘贴视频链接或 BV 号&#10;每行一个，可以一次添加多个" aria-describedby="links-hint link-count" required disabled></textarea><span class="input-corner" aria-hidden="true">↙</span></div>
+            <div class="input-caption"><p id="links-hint">支持视频链接、分享文字和 BV 号</p><span id="link-count">0 个视频</span></div>
+            <div class="capture-summary"><span class="summary-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="7" y="3" width="10" height="14" rx="4" stroke="currentColor" stroke-width="1.5"/><path d="M4 12a8 8 0 0 0 16 0m-8 8v2m-3 0h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><div><p id="mode-summary">本地语音转写</p><span id="model-summary">正在读取设置…</span></div><button type="button" id="edit-transcription" class="text-button">调整</button></div>
+            <div id="submit-error" class="inline-error" role="alert" hidden></div>
+            <button type="submit" class="primary-button start-button" id="start-button" disabled><span id="start-label">开始收录</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <p class="capture-footnote">按剪藏格式保存 Markdown，同一视频再次收录会覆盖</p>
+          </form>
+        </section>
+
+        <section class="queue-card card" aria-labelledby="queue-heading">
+          <div class="section-heading"><h2 id="queue-heading"><span class="section-number">02</span>收录记录 <span class="queue-total" id="queue-total">0</span></h2><span id="queue-status" class="subtle-label">依次处理</span></div>
+          <div class="queue-tabs" role="tablist" aria-label="筛选收录记录"><button type="button" class="queue-tab is-active" role="tab" aria-selected="true" aria-controls="job-list" id="tab-all" data-filter="all">全部<span id="count-all">0</span></button><button type="button" class="queue-tab" role="tab" aria-selected="false" aria-controls="job-list" id="tab-active" data-filter="active" tabindex="-1">进行中<span id="count-active">0</span></button><button type="button" class="queue-tab" role="tab" aria-selected="false" aria-controls="job-list" id="tab-completed" data-filter="completed" tabindex="-1">已完成<span id="count-completed">0</span></button></div>
+          <div id="queue-loading" class="queue-placeholder"><span class="loading-ring" aria-hidden="true"></span><p>正在读取收录记录…</p></div>
+          <div id="queue-empty" class="queue-placeholder" hidden><div class="empty-illustration" aria-hidden="true"><svg viewBox="0 0 96 96" fill="none"><rect x="21" y="15" width="51" height="67" rx="8" transform="rotate(-8 21 15)" fill="#e8ede6"/><rect x="25" y="12" width="51" height="67" rx="8" fill="#fcfcf8" stroke="#b4c6b9" stroke-width="1.5"/><path d="M38 54h25M38 61h17M39 36v-4m7 12V25m7 14V30m7 6v-3" stroke="#729384" stroke-width="2.2" stroke-linecap="round"/><circle cx="74" cy="72" r="14" fill="#255b4d"/><path d="M68 72h12m-6-6v12" stroke="white" stroke-width="1.7" stroke-linecap="round"/></svg></div><h3 id="empty-title">第一篇笔记，从一个链接开始</h3><p id="empty-copy">添加视频后，下载和转写进度会显示在这里。</p></div>
+          <div id="job-list" class="job-list" role="tabpanel" aria-labelledby="tab-all" hidden></div>
+          <div class="queue-footer"><span class="tiny-dot" aria-hidden="true"></span><p id="runtime-note">转写在这台电脑上完成</p></div>
+        </section>
+      </div>
+      <footer class="page-footer"><span>听页 <span id="app-version"></span></span><span>本地转写 · 直接入库</span><button class="text-button quit-button" id="shutdown-button" type="button">退出服务</button></footer>
+    </main>
+  </div>
+
+  <dialog id="settings-dialog" aria-labelledby="settings-title">
+    <form id="settings-form">
+      <div class="dialog-header"><div><p class="eyebrow">PREFERENCES</p><h2 id="settings-title">收录设置</h2></div><button class="icon-button" id="close-settings" type="button" aria-label="关闭设置"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button></div>
+      <div class="dialog-body">
+        <section class="settings-section"><h3>保存位置</h3><div class="field"><label for="vault-select">已发现的 Obsidian 笔记库</label><select id="vault-select"><option value="">手动选择文件夹</option></select></div><div class="field"><label for="vault-path">笔记库文件夹</label><div class="input-with-button"><input type="text" id="vault-path" required autocomplete="off" placeholder="选择你的 Obsidian 笔记库"><button class="secondary-button" id="pick-vault" type="button">选择文件夹</button></div></div><div class="field"><label for="subfolder">存入子文件夹</label><input type="text" id="subfolder" autocomplete="off" placeholder="视频笔记"><p class="field-hint">相对于笔记库，留空则存入笔记库根目录。</p></div></section>
+        <section class="settings-section" id="transcription-settings"><h3>语音转写</h3><div class="fields-row"><div class="field"><label for="model">转写模型</label><select id="model"><option value="large-v3-turbo">Turbo · 更完整的识别</option><option value="small">Small · 更省内存</option></select></div><div class="field"><label for="language">视频语言</label><select id="language"><option value="auto">自动识别</option><option value="zh">中文</option><option value="en">英语</option></select></div></div><p id="model-cache-note" class="model-cache-note">首次使用会下载模型，之后可在本机转写。</p><div class="field"><label for="cpu-threads">处理线程</label><input type="number" id="cpu-threads" min="1" max="64" step="1" required><p class="field-hint">调低可减少电脑占用，处理时间可能更长。</p></div><div class="field"><label for="hotwords">术语提示 <span class="optional-label">可选</span></label><textarea id="hotwords" rows="2" maxlength="2000" placeholder="例如 Obsidian、PyTorch、六维位姿"></textarea><p class="field-hint">写下可能出现的专有名词，供本地模型识别时参考。</p></div></section>
+        <section class="settings-section options-section"><label class="switch-row" for="prefer-subtitles"><span><strong>优先使用已有字幕</strong><small>有可用字幕时直接保存，否则下载音轨转写。</small></span><input type="checkbox" id="prefer-subtitles" role="switch"><span class="switch-track" aria-hidden="true"></span></label><p class="field-hint">只保存一份 Markdown。音轨转写后自动清理，重复视频覆盖原笔记。</p></section>
+        <p class="settings-note">设置会应用到下一批收录，进行中的任务沿用提交时的设置。</p><div id="settings-error" class="inline-error" role="alert" hidden></div>
+      </div>
+      <div class="dialog-footer"><button class="secondary-button" id="cancel-settings" type="button">取消</button><button type="submit" class="primary-button" id="save-settings">保存设置</button></div>
+    </form>
+  </dialog>
+  <dialog id="shutdown-dialog" class="small-dialog" aria-labelledby="shutdown-title"><div class="dialog-header"><h2 id="shutdown-title">退出听页</h2></div><div class="dialog-body"><p id="shutdown-copy">退出后，双击启动文件即可再次打开。</p></div><div class="dialog-footer"><button class="secondary-button" id="cancel-shutdown" type="button">继续使用</button><button class="primary-button" id="confirm-shutdown" type="button">退出服务</button></div></dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <div class="sr-only" id="job-announcement" aria-live="polite" aria-atomic="true"></div>
+</body>
+</html>

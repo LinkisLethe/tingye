@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="280" viewBox="0 0 1200 280" role="img" aria-labelledby="title desc">
+  <title id="title">听页 Tingye</title>
+  <desc id="desc">Bilibili to Obsidian. Local transcription, timestamped Markdown.</desc>
+  <rect width="1200" height="280" rx="22" fill="#f4f5ef"/>
+  <rect x="48" y="56" width="72" height="72" rx="20" fill="#255b4d"/>
+  <path d="M66 96v-8m12 22V74m12 30V80m12 16v-8" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+  <text x="144" y="107" font-family="Segoe UI,Microsoft YaHei,sans-serif" font-size="42" font-weight="700" fill="#203d34">听页 <tspan font-size="26" font-weight="400" fill="#608072">TINGYE</tspan></text>
+  <text x="52" y="185" font-family="Microsoft YaHei,Segoe UI,sans-serif" font-size="29" fill="#203d34">听过的，留成一页。</text>
+  <text x="52" y="225" font-family="Segoe UI,sans-serif" font-size="17" fill="#608072">BILIBILI → OBSIDIAN · LOCAL TRANSCRIPTION</text>
+  <g stroke="#91ad9d" stroke-width="7" stroke-linecap="round">
+    <path d="M795 145v-10m22 30v-50m22 75V90m22 92V98m22 62v-40m22 30v-20"/>
+  </g>
+  <rect x="955" y="59" width="156" height="169" rx="13" fill="#fff" stroke="#b9cbbb" stroke-width="2"/>
+  <path d="M978 94h70m-70 27h105m-105 27h105m-105 27h80m-80 27h49" stroke="#b9cbbb" stroke-width="5" stroke-linecap="round"/>
+</svg>

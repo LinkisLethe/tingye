@@ -1,0 +1,4 @@
+faster-whisper==1.2.1
+httpx==0.28.1
+opencc-python-reimplemented==0.1.7
+huggingface-hub==1.31.0
